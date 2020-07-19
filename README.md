@@ -1,5 +1,7 @@
 # Notify Slack Action
 
+Send workflow status notifications to Slack.
+
 ### Example workflow
 
 ```yaml

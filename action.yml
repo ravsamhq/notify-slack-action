@@ -1,5 +1,5 @@
 name: 'Notify Slack Action'
-description: 'Send workflow status notifocations to Slack'
+description: 'Send workflow status notifications to Slack'
 author: 'RavSam'
 inputs:
   status:
