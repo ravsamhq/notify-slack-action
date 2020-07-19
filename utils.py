@@ -1,25 +1,37 @@
 def action_color(status):
+    """
+    Get a action color based on the workflow status.
+    """
+
     if status == 'success':
         return 'good'
-    else if status == 'failure':
+    elif status == 'failure':
         return 'danger'
-    else:
-        return 'warning'
+
+    return 'warning'
 
 
 def action_status(status):
+    """
+    Get a transformed status based on the workflow status.
+    """
+
     if status == 'success':
         return 'passed'
-    else if status == 'failure':
+    elif status == 'failure':
         return 'failed'
-    else:
-        return 'passed with warnings'
+
+    return 'passed with warnings'
 
 
 def action_emoji(status):
+    """
+    Get an emoji based on the workflow status.
+    """
+
     if status == 'success':
         return ':sunglasses:'
-    else if status == 'failure':
+    elif status == 'failure':
         return ':worried:'
-    else:
-        return ':zipper_mouth_face:'
+
+    return ':zipper_mouth_face:'
