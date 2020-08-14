@@ -1,9 +1,10 @@
 import requests
 import os
 import json
+import sys
 
 
-def action_color(status):
+def actionColor(status):
     """
     Get a action color based on the workflow status.
     """
@@ -16,7 +17,7 @@ def action_color(status):
     return 'warning'
 
 
-def action_status(status):
+def actionStatus(status):
     """
     Get a transformed status based on the workflow status.
     """
@@ -29,7 +30,7 @@ def action_status(status):
     return 'passed with warnings'
 
 
-def action_emoji(status):
+def actionEmoji(status):
     """
     Get an emoji based on the workflow status.
     """
@@ -42,21 +43,21 @@ def action_emoji(status):
     return ':zipper_mouth_face:'
 
 
-def notify_slack(job_status):
-    url = os.environ.get('SLACK_WEBHOOK_URL')
-    workflow = os.environ.get('GITHUB_WORKFLOW')
-    repo = os.environ.get('GITHUB_REPOSITORY')
-    branch = os.environ.get('GITHUB_REF')
-    commit = os.environ.get('GITHUB_SHA')
+def notify_slack(job_status, notify_when):
+    url = os.getenv('SLACK_WEBHOOK_URL')
+    workflow = os.getenv('GITHUB_WORKFLOW')
+    repo = os.getenv('GITHUB_REPOSITORY')
+    branch = os.getenv('GITHUB_REF')
+    commit = os.getenv('GITHUB_SHA')
 
     commit_url = f'https://github.com/{repo}/commit/{commit}'
     repo_url = f'https://github.com/{repo}/tree/{branch}'
 
-    color = action_color(job_status)
-    status = action_status(job_status)
-    emoji = action_emoji(job_status)
+    color = actionColor(job_status)
+    status_message = actionStatus(job_status)
+    emoji = actionEmoji(job_status)
 
-    message = f'{emoji} {workflow} {status} in <{repo_url}|{repo}@{branch}> on <{commit_url}|{commit[:7]}>.'
+    message = f'{emoji} {workflow} {status_message} in <{repo_url}|{repo}@{branch}> on <{commit_url}|{commit[:7]}>.'
 
     payload = {
         'attachments': [
@@ -75,13 +76,20 @@ def notify_slack(job_status):
 
     headers = {'Content-Type': 'application/json'}
 
-    requests.post(url, data=payload, headers=headers)
+    if job_status in notify_when and not testing:
+        requests.post(url, data=payload, headers=headers)
 
 
 def main():
-    job_status = os.environ["INPUT_STATUS"]
-    notify_slack(job_status)
+    job_status = os.getenv('INPUT_STATUS')
+    notify_when = os.getenv('INPUT_NOTIFY_WHEN')
+    notify_slack(job_status, notify_when)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
+    try:
+        testing = True if sys.argv[1] == '--test' else False
+    except IndexError as e:
+        testing = False
+
     main()

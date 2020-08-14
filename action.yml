@@ -1,10 +1,15 @@
-name: 'Notify Slack Action'
-description: 'Send workflow status notifications to Slack'
-author: 'RavSam'
+name: Notify Slack Action
+description: Send Github Actions workflow status notifications to Slack
+author: RavSam
 inputs:
   status:
-    description: 'Job Status'
+    description: Job Status
     required: true
+  notify_when:
+    description: Specify on which events a slack notification is sent
+    required: false
+    default: [success, failure, warnings]
+
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
+  using: docker
+  image: Dockerfile
