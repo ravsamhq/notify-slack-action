@@ -32,4 +32,4 @@ jobs:
 
       - name: Test Action
         run: |-
-          python src/main.py --test
+          python main.py --test
