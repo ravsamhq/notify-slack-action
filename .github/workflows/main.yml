@@ -14,7 +14,7 @@ jobs:
 
     env:
       INPUT_STATUS: failure
-      INPUT_NOTIFY_WHEN: ['failure']
+      INPUT_NOTIFY_WHEN: '["failure"]'
 
     steps:
       - name: Clone the repository

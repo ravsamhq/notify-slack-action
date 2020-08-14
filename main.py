@@ -82,7 +82,7 @@ def notify_slack(job_status, notify_when):
 
 def main():
     job_status = os.getenv('INPUT_STATUS')
-    notify_when = os.getenv('INPUT_NOTIFY_WHEN')
+    notify_when = json.loads(os.getenv('INPUT_NOTIFY_WHEN'))
     notify_slack(job_status, notify_when)
 
 

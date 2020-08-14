@@ -8,7 +8,7 @@ inputs:
   notify_when:
     description: Specify on which events a slack notification is sent
     required: false
-    default: [success, failure, warnings]
+    default: '["success", "failure", "warnings"]'
 
 runs:
   using: docker
