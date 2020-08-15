@@ -1,3 +1,7 @@
+![Test](https://github.com/ravsamhq/notify-slack-action/workflows/Test/badge.svg)
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 # Notify Slack Action
 
 Send workflow status notifications to Slack.
