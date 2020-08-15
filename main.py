@@ -76,6 +76,9 @@ def notify_slack(job_status, notify_when):
 
     headers = {'Content-Type': 'application/json'}
 
+    if notify_when is None:
+        notify_when = ['success', 'failure', 'warnings']
+
     if job_status in notify_when and not testing:
         requests.post(url, data=payload, headers=headers)
 
