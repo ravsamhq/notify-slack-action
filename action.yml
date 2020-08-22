@@ -10,6 +10,11 @@ inputs:
     required: false
     default: '["success", "failure", "warnings"]'
 
+branding:
+  icon: send
+  color: yellow
+
 runs:
   using: docker
   image: Dockerfile
+  
