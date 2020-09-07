@@ -12,9 +12,8 @@ inputs:
 
 branding:
   icon: send
-  color: yellow
+  color: blue
 
 runs:
   using: docker
   image: Dockerfile
-  
