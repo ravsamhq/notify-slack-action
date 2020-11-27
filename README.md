@@ -3,7 +3,7 @@
 
 # Notify Slack Action
 
-Send workflow status notifications to Slack.
+Send Github Actions workflow status notifications to Slack regarding failures, warnings or even success.
 
 ### Example workflow
 
@@ -13,10 +13,9 @@ steps:
     if: always()
     with:
       status: ${{ job.status }}
-      notify_when: 'failure' # default: 'success,failure,warnings'
+      notify_when: 'failure' # default is 'success,failure,warnings'
     env:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # optional
 ```
 
-> Made in Python &bull; By [Ravgeet Dhillon](https://github.com/ravgeetdhillon) @ [RavSam Web Solutions](https://www.ravsam.in).
+<sub>Made in Python &bull; By [Ravgeet Dhillon](https://github.com/ravgeetdhillon) @ [RavSam Web Solutions](https://www.ravsam.in).</sub>
