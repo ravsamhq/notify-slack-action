@@ -3,7 +3,7 @@
 
 # Notify Slack Action
 
-Send Github Actions workflow status notifications to Slack regarding failures, warnings or even success.
+Send Github Actions workflow status notifications to Slack regarding failures, warnings or even success. You can read more about the action in [our blog post](https://www.ravsam.in/blog/send-slack-notification-when-github-actions-fails/).
 
 ### Example workflow
 
