@@ -1,0 +1,89 @@
+name: Create Release
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  get-admins:
+    if: github.event.head_commit.message == 'do-production-release'
+    runs-on: ubuntu-latest
+    outputs:
+      admins: ${{ steps.admins.outputs.admins }}
+    steps:
+      - name: Dump Github Context
+        continue-on-error: true
+        run: |
+          printf "${{ toJson(github) }}"
+ 
+      - name: Set up Repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Get Admins
+        id: admins
+        run: |
+          admins="|`tr '\n' '|' < .github/admins.txt`"
+          echo "::set-output name=admins::$admins"
+          echo "Admins: $admins"
+  
+  create-release:
+    needs: get-admins
+    if: github.event.head_commit.message == 'do-production-release' && contains(needs.get-admins.outputs.admins, format('|{0}|', github.event.head_commit.author.username))
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: Install Semantic Release NPM Dependencies
+        run: |
+          npm i -g semantic-release @semantic-release/{commit-analyzer,release-notes-generator}
+          
+      - name: Run Semantic Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          npx semantic-release --repository-url "https://github.com/$GITHUB_REPOSITORY" --branches master --tagFormat \${version} --plugins "@semantic-release/commit-analyzer" "@semantic-release/release-notes-generator" --no-ci --dry-run > temp.txt
+
+      - name: Get Last Release Version
+        continue-on-error: true
+        run: |
+          last_version=`git describe --tags --abbrev=0`
+          echo "Last Version: $last_version"
+          echo "last_version=$last_version" >> $GITHUB_ENV
+
+      - name: Get Next Release Version
+        run: |
+          next_version=`cat temp.txt | grep -oP 'Published release \K.*? ' | xargs`
+          echo "Next Version: $next_version"
+          echo "next_version=$next_version" >> $GITHUB_ENV
+
+      - name: Cancel if Next Version is same as Last Version
+        if: env.last_version == env.next_version
+        uses: andymckay/cancel-action@0.2
+      
+      - name: Get Release Notes
+        run: |
+          release_notes=`cat temp.txt | sed '/^##/,$!d' | awk '{$1=$1};1' | sed 's/))/)/g' | sed 's/ (h/](h/g' | sed 's/^## /## [/' | sed 's/) (/)(/g' | sed 's/ (/ [/g' | sed 's/)(/) (/g' | sed 's/\w/\u&/'`
+          printf "$release_notes" > RELEASE_NOTES.md
+      
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          name: ${{ env.next_version }}
+          tag: ${{ env.next_version }}
+          commit: master
+          bodyFile: RELEASE_NOTES.md
+          allowUpdates: false
+          prerelease: false
+          draft: false
+          token: ${{ secrets.GITHUB_TOKEN }}
