@@ -5,8 +5,28 @@ inputs:
   status:
     description: Job Status
     required: true
+  notification_title:
+    description: Specify on the notification message title
+    required: false
+    default: 'New Github Action Run'
+  message_format:
+    description: Specify on the notification message format
+    required: false
+    default: '{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}@{branch}> on <{commit_url}|{commit_sha}>'
+  footer:
+    description: Specify the footer of the message
+    required: false
+    default: 'Developed by <https://www.ravsam.in|RavSam>'
   notify_when:
     description: Specify on which events a slack notification is sent
+    required: false
+    default: 'success,failure,warnings'
+  mention:
+    description: Specify the slack IDs of users you want to mention.
+    required: false
+    default: ''
+  mention_when:
+    description: Specify on which events you want to mention the users
     required: false
     default: 'success,failure,warnings'
 
