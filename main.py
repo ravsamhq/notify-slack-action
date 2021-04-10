@@ -59,15 +59,22 @@ def construct_payload(inputs):
     branch = os.getenv('GITHUB_REF')
     commit_sha = os.getenv('GITHUB_SHA')[:7]
 
+    # derived from action inputs
+    job_status = inputs['job_status']
+    message = inputs['message_format']
+    title = inputs['notification_title']
+    footer = inputs['footer']
+    mention = inputs['mention']
+    mention_when = inputs['mention_when']
+
     # self constructed
     commit_url = f'https://github.com/{repo}/commit/{commit_sha}'
     repo_url = f'https://github.com/{repo}/tree/{branch}'
-    color = action_color(inputs['job_status'])
-    status_message = action_status(inputs['job_status'])
-    emoji = action_emoji(inputs['job_status'])
+    color = action_color(job_status)
+    status_message = action_status(job_status)
+    emoji = action_emoji(job_status)
 
     # construct notification title
-    title = inputs['notification_title']
     title = title.replace('{emoji}', emoji)
     title = title.replace('{workflow}', workflow)
     title = title.replace('{status_message}', status_message)
@@ -78,7 +85,6 @@ def construct_payload(inputs):
     title = title.replace('{commit_sha}', commit_sha)
 
     # construct the message
-    message = inputs['message_format']
     message = message.replace('{emoji}', emoji)
     message = message.replace('{workflow}', workflow)
     message = message.replace('{status_message}', status_message)
@@ -88,8 +94,12 @@ def construct_payload(inputs):
     message = message.replace('{commit_url}', commit_url)
     message = message.replace('{commit_sha}', commit_sha)
 
+    # added mentions to the message
+    if job_status in mention_when:
+        for user_id in mention.split(','):
+            message = message + f' <@{user_id}>'
+
     # construct the footer
-    footer = inputs['footer']
     footer = footer.replace('{emoji}', emoji)
     footer = footer.replace('{workflow}', workflow)
     footer = footer.replace('{status_message}', status_message)
@@ -137,6 +147,8 @@ def main(testing=False):
         'message_format': os.getenv('INPUT_MESSAGE_FORMAT'),
         'footer': os.getenv('INPUT_FOOTER'),
         'notify_when': os.getenv('INPUT_NOTIFY_WHEN'),
+        'mention': os.getenv('INPUT_MENTION'),
+        'mention_when': os.getenv('INPUT_MENTION_WHEN'),
     }
 
     payload = construct_payload(inputs)

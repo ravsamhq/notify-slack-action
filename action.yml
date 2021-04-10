@@ -21,6 +21,14 @@ inputs:
     description: Specify on which events a slack notification is sent
     required: false
     default: 'success,failure,warnings'
+  mention:
+    description: Specify the slack IDs of users you want to mention.
+    required: false
+    default: ''
+  mention_when:
+    description: Specify on which events you want to mention the users
+    required: false
+    default: 'success,failure,warnings'
 
 branding:
   icon: send
