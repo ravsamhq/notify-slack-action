@@ -5,19 +5,45 @@
 
 Send Github Actions workflow status notifications to Slack regarding failures, warnings or even success. You can read more about the action in [our blog post](https://www.ravsam.in/blog/send-slack-notification-when-github-actions-fails/).
 
-## Minimal workflow
+## Inputs
 
-```yaml
-steps:
-  - uses: ravsamhq/notify-slack-action@master
-    if: always()
-    with:
-      status: ${{ job.status }} # required
-    env:
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+```yml
+status:
+  description: Job Status
+  required: true
+
+notification_title:
+  description: Specify on the notification message title
+  required: false
+  default: 'New Github Action Run'
+
+message_format:
+  description: Specify on the notification message format
+  required: false
+  default: '{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}@{branch}> on <{commit_url}|{commit_sha}>'
+
+footer:
+  description: Specify the footer of the message
+  required: false
+  default: 'Developed by <https://www.ravsam.in|RavSam>'
+
+notify_when:
+  description: Specify on which events a slack notification is sent
+  required: false
+  default: 'success,failure,warnings'
+
+mention:
+  description: Specify the slack IDs of users you want to mention.
+  required: false
+  default: ''
+
+mention_when:
+  description: Specify on which events you want to mention the users
+  required: false
+  default: 'success,failure,warnings'
 ```
 
-## Example workflow
+## Example workflows
 
 The following variables are available for formatting your own strings.
 
@@ -32,19 +58,59 @@ The following variables are available for formatting your own strings.
 
 You can use these to construct custom `notification_title`, `message_format` and `footer`. To get an idea see the workflow below.
 
+### Minimal workflow
+
+![](screenshots/minimal.png)
+
 ```yaml
 steps:
   - uses: ravsamhq/notify-slack-action@master
     if: always()
     with:
       status: ${{ job.status }} # required
-      notification_title: '{workflow} has {status_message}' # optional
-      message_format: '{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>' # optional
-      footer: 'Linked Repo <{repo_url}|{repo}>' # optional
-      notify_when: 'failure' # optional
     env:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 ```
+
+### Extended Example without Mentions
+
+![](screenshots/without-mentions.png)
+
+```yaml
+steps:
+  - uses: ravsamhq/notify-slack-action@master
+    if: always()
+    with:
+      status: ${{ job.status }}
+      notification_title: '{workflow} has {status_message}'
+      message_format: '{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>'
+      footer: 'Linked Repo <{repo_url}|{repo}>'
+      notify_when: 'failure'
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+```
+
+### Extended Example with Mentions
+
+![](screenshots/with-mentions.png)
+
+```yaml
+steps:
+  - uses: ravsamhq/notify-slack-action@master
+    if: always()
+    with:
+      status: ${{ job.status }}
+      notification_title: '{workflow} has {status_message}'
+      message_format: '{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>'
+      footer: 'Linked Repo <{repo_url}|{repo}>'
+      notify_when: 'failure'
+      mention: 'U0160UUNH8S,U0080UUAA9N'
+      mention_when: 'failure,warnings'
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+```
+
+> To get the Slack Member IDs, open the User profile you want to mention. Click *More* and *Copy Member ID*.
 
 ## Tech Stack
 
@@ -76,7 +142,7 @@ pip install -r requirements.txt
 
 This project uses [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/ravsamhq/notify-slack-action/tags).
 
-## Contributors
+## Authors
 
 - [Ravgeet Dhillon](https://github.com/ravgeetdhillon)
 
