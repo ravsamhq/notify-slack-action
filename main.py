@@ -1,10 +1,15 @@
-import requests
-import os
+"""
+A Github Action to send Github Actions workflow status notifications to Slack.
+Main module for the app.
+"""
+
 import json
-import sys
+import os
+import requests
+from dotenv import load_dotenv
 
 
-def actionColor(status):
+def action_color(status):
     """
     Get a action color based on the workflow status.
     """
@@ -13,11 +18,11 @@ def actionColor(status):
         return 'good'
     elif status == 'failure':
         return 'danger'
+    else:
+        return 'warning'
 
-    return 'warning'
 
-
-def actionStatus(status):
+def action_status(status):
     """
     Get a transformed status based on the workflow status.
     """
@@ -26,73 +31,119 @@ def actionStatus(status):
         return 'passed'
     elif status == 'failure':
         return 'failed'
+    else:
+        return 'passed with warnings'
 
-    return 'passed with warnings'
 
-
-def actionEmoji(status):
+def action_emoji(status):
     """
     Get an emoji based on the workflow status.
     """
 
     if status == 'success':
-        return ':sunglasses:'
+        return ':heavy_check_mark:'
     elif status == 'failure':
-        return ':worried:'
+        return ':x:'
+    else:
+        return ':large_orange_diamond:'
 
-    return ':zipper_mouth_face:'
 
+def construct_payload(inputs):
+    """
+    Creates a message payload which can be sent to Slack.
+    """
 
-def notify_slack(job_status, notify_when):
-    url = os.getenv('SLACK_WEBHOOK_URL')
+    # derived from workflow environment
     workflow = os.getenv('GITHUB_WORKFLOW')
     repo = os.getenv('GITHUB_REPOSITORY')
     branch = os.getenv('GITHUB_REF')
-    commit = os.getenv('GITHUB_SHA')
+    commit_sha = os.getenv('GITHUB_SHA')[:7]
 
-    commit_url = f'https://github.com/{repo}/commit/{commit}'
+    # self constructed
+    commit_url = f'https://github.com/{repo}/commit/{commit_sha}'
     repo_url = f'https://github.com/{repo}/tree/{branch}'
+    color = action_color(inputs['job_status'])
+    status_message = action_status(inputs['job_status'])
+    emoji = action_emoji(inputs['job_status'])
 
-    color = actionColor(job_status)
-    status_message = actionStatus(job_status)
-    emoji = actionEmoji(job_status)
+    # construct notification title
+    title = inputs['notification_title']
+    title = title.replace('{emoji}', emoji)
+    title = title.replace('{workflow}', workflow)
+    title = title.replace('{status_message}', status_message)
+    title = title.replace('{repo}', repo)
+    title = title.replace('{repo_url}', repo_url)
+    title = title.replace('{branch}', branch)
+    title = title.replace('{commit_url}', commit_url)
+    title = title.replace('{commit_sha}', commit_sha)
 
-    message = f'{emoji} {workflow} {status_message} in <{repo_url}|{repo}@{branch}> on <{commit_url}|{commit[:7]}>.'
+    # construct the message
+    message = inputs['message_format']
+    message = message.replace('{emoji}', emoji)
+    message = message.replace('{workflow}', workflow)
+    message = message.replace('{status_message}', status_message)
+    message = message.replace('{repo}', repo)
+    message = message.replace('{repo_url}', repo_url)
+    message = message.replace('{branch}', branch)
+    message = message.replace('{commit_url}', commit_url)
+    message = message.replace('{commit_sha}', commit_sha)
+
+    # construct the footer
+    footer = inputs['footer']
+    footer = footer.replace('{emoji}', emoji)
+    footer = footer.replace('{workflow}', workflow)
+    footer = footer.replace('{status_message}', status_message)
+    footer = footer.replace('{repo}', repo)
+    footer = footer.replace('{repo_url}', repo_url)
+    footer = footer.replace('{branch}', branch)
+    footer = footer.replace('{commit_url}', commit_url)
+    footer = footer.replace('{commit_sha}', commit_sha)
 
     payload = {
         'attachments': [
             {
                 'text': message,
-                'fallback': 'New Github Action Run',
-                'pretext': 'New Github Action Run',
+                'fallback': title,
+                'pretext': title,
                 'color': color,
                 'mrkdwn_in': ['text'],
-                'footer': 'Developed by <https://www.ravsam.in|RavSam>',
+                'footer': footer,
             }
         ]
     }
 
-    payload = json.dumps(payload)
+    return json.dumps(payload)
 
-    headers = {'Content-Type': 'application/json'}
 
-    if notify_when is None:
-        notify_when = 'success,failure,warnings'
+def notify_slack(payload, testing=False):
+    """
+    Send a Slack notification.
+    """
 
-    if job_status in notify_when and not testing:
+    if not testing:
+        headers = {'Content-Type': 'application/json'}
+        url = os.getenv('SLACK_WEBHOOK_URL')
         requests.post(url, data=payload, headers=headers)
 
 
-def main():
-    job_status = os.getenv('INPUT_STATUS')
-    notify_when = os.getenv('INPUT_NOTIFY_WHEN')
-    notify_slack(job_status, notify_when)
+def main(testing=False):
+    """
+    Main function for the app.
+    """
+
+    inputs = {
+        'job_status': os.getenv('INPUT_STATUS'),
+        'notification_title': os.getenv('INPUT_NOTIFICATION_TITLE'),
+        'message_format': os.getenv('INPUT_MESSAGE_FORMAT'),
+        'footer': os.getenv('INPUT_FOOTER'),
+        'notify_when': os.getenv('INPUT_NOTIFY_WHEN'),
+    }
+
+    payload = construct_payload(inputs)
+    if inputs['job_status'] in inputs['notify_when'] and not testing:
+        notify_slack(payload)
 
 
 if __name__ == '__main__':
-    try:
-        testing = True if sys.argv[1] == '--test' else False
-    except IndexError as e:
-        testing = False
-
+    load_dotenv()
     main()
