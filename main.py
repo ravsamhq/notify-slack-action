@@ -64,8 +64,10 @@ def construct_payload(inputs):
     message = inputs['message_format']
     title = inputs['notification_title']
     footer = inputs['footer']
-    mention = inputs['mention']
-    mention_when = inputs['mention_when']
+    mention_users = inputs['mention_users']
+    mention_users_when = inputs['mention_users_when']
+    mention_groups = inputs['mention_groups']
+    mention_groups_when = inputs['mention_groups_when']
 
     # self constructed
     commit_url = f'https://github.com/{repo}/commit/{commit_sha}'
@@ -94,11 +96,17 @@ def construct_payload(inputs):
     message = message.replace('{commit_url}', commit_url)
     message = message.replace('{commit_sha}', commit_sha)
 
-    # added mentions to the message
-    if job_status in mention_when and mention.strip() != '':
+    # added user mentions to the message
+    if job_status in mention_users_when and mention_users.strip() != '':
         message += '\n'
-        for user_id in mention.split(','):
-            message = message + f'<@{user_id}> '
+        for user in mention_users.split(','):
+            message = message + f'<@{user}> '
+
+    # added group mentions to the message
+    if job_status in mention_groups_when and mention_groups.strip() != '':
+        message += '\n'
+        for group in mention_groups.split(','):
+            message = message + f'<!subteam^{group}> '
 
     # construct the footer
     footer = footer.replace('{emoji}', emoji)
@@ -148,8 +156,10 @@ def main(testing=False):
         'message_format': os.getenv('INPUT_MESSAGE_FORMAT'),
         'footer': os.getenv('INPUT_FOOTER'),
         'notify_when': os.getenv('INPUT_NOTIFY_WHEN'),
-        'mention': os.getenv('INPUT_MENTION'),
-        'mention_when': os.getenv('INPUT_MENTION_WHEN'),
+        'mention_users': os.getenv('INPUT_MENTION_USERS'),
+        'mention_users_when': os.getenv('INPUT_MENTION_USERS_WHEN'),
+        'mention_groups': os.getenv('INPUT_MENTION_GROUPS'),
+        'mention_groups_when': os.getenv('INPUT_MENTION_GROUPS_WHEN'),
     }
 
     payload = construct_payload(inputs)
