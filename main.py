@@ -95,9 +95,10 @@ def construct_payload(inputs):
     message = message.replace('{commit_sha}', commit_sha)
 
     # added mentions to the message
-    if job_status in mention_when:
+    if job_status in mention_when and mention.strip() != '':
+        message += '\n'
         for user_id in mention.split(','):
-            message = message + f' <@{user_id}>'
+            message = message + f'<@{user_id}> '
 
     # construct the footer
     footer = footer.replace('{emoji}', emoji)
