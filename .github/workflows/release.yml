@@ -68,7 +68,7 @@ jobs:
           echo "next_version=$next_version" >> $GITHUB_ENV
 
       - name: Cancel if Next Version is same as Last Version
-        if: env.last_version == env.next_version
+        if: (env.last_version == env.next_version) || env.next_version == ''
         uses: andymckay/cancel-action@0.2
       
       - name: Get Release Notes
