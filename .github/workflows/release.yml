@@ -70,8 +70,19 @@ jobs:
       - name: Cancel if Next Version is same as Last Version
         if: (env.last_version == env.next_version) || env.next_version == ''
         uses: andymckay/cancel-action@0.2
+  
+      - name: Get Major Version related to Next Version
+        run: |
+          major_version="v`echo $next_version | cut -d \. -f 1`"
+          echo "Major Version: $major_version"
+          echo "major_version=$major_version" >> $GITHUB_ENV
+          major_version_exists="false"
+          if git rev-parse $major_version >/dev/null 2>&1; then
+            major_version_exists="true"
+          fi
+          echo "major_version_exists=$major_version_exists" >> $GITHUB_ENV
       
-      - name: Get Release Notes
+      - name: Generate Release Notes
         run: |
           release_notes=`cat temp.txt | sed '/^##/,$!d' | awk '{$1=$1};1' | sed 's/))/)/g' | sed 's/ (h/](h/g' | sed 's/^## /## [/' | sed 's/) (/)(/g' | sed 's/ (/ [/g' | sed 's/)(/) (/g' | sed 's/\w/\u&/'`
           printf "$release_notes" > RELEASE_NOTES.md
@@ -83,7 +94,23 @@ jobs:
           tag: ${{ env.next_version }}
           commit: master
           bodyFile: RELEASE_NOTES.md
-          allowUpdates: false
           prerelease: false
           draft: false
           token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Major Version Release if it doesn't exist
+        if: env.major_version_exists == 'false'
+        uses: ncipollo/release-action@v1
+        with:
+          name: ${{ env.major_version }}
+          tag: ${{ env.major_version }}
+          commit: master
+          prerelease: false
+          draft: false
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update Major Version Release if it exists
+        if: env.major_version_exists == 'true'
+        run: |
+          git tag -fa $major_version -m "chore: point $major_version to $next_version"
+          git push origin $major_version --force
