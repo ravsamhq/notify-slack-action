@@ -81,7 +81,7 @@ You can use these to construct custom `notification_title`, `message_format` and
 
 ```yaml
 steps:
-  - uses: ravsamhq/notify-slack-action@
+  - uses: ravsamhq/notify-slack-action@v1
     if: always()
     with:
       status: ${{ job.status }} # required
@@ -95,7 +95,7 @@ steps:
 
 ```yaml
 steps:
-  - uses: ravsamhq/notify-slack-action@
+  - uses: ravsamhq/notify-slack-action@v1
     if: always()
     with:
       status: ${{ job.status }}
@@ -113,7 +113,7 @@ steps:
 
 ```yaml
 steps:
-  - uses: ravsamhq/notify-slack-action@
+  - uses: ravsamhq/notify-slack-action@v1
     if: always()
     with:
       status: ${{ job.status }}
