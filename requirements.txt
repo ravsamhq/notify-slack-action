@@ -7,7 +7,7 @@ isort==5.8.0
 lazy-object-proxy==1.6.0
 mccabe==0.6.1
 pycodestyle==2.7.0
-pylint==2.7.4
+pylint==2.8.2
 python-dotenv==0.17.0
 requests==2.25.1
 toml==0.10.2
