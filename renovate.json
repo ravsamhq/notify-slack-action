@@ -1,9 +1,3 @@
 {
-  "extends": ["config:base"],
-  "packageRules": [
-    {
-      "updateTypes": ["minor", "patch"]
-    }
-  ],
-  "schedule": ["every weekend"]
+  "extends": ["github>ravsamhq/dotfiles"]
 }
