@@ -20,7 +20,7 @@ inputs:
   footer:
     description: Specify the footer of the message
     required: false
-    default: "<{run_url}|View Run> | <{workflow_url}|View Workflow> | Developed by <https://www.ravsam.in|RavSam>"
+    default: "<{run_url}|View Run> | Developed by <https://www.ravsam.in|RavSam>"
   notify_when:
     description: Specify on which events a slack notification is sent
     required: false

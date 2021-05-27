@@ -19,6 +19,11 @@ status:
   description: Job Status
   required: true
 
+token:
+  description: Github Token for accessing workflow url
+  required: false
+  default: ''
+
 notification_title:
   description: Specify on the notification message title
   required: false
@@ -32,7 +37,7 @@ message_format:
 footer:
   description: Specify the footer of the message
   required: false
-  default: 'Developed by <https://www.ravsam.in|RavSam>'
+  default: "<{run_url}|View Run> | Developed by <https://www.ravsam.in|RavSam>"
 
 notify_when:
   description: Specify on which events a slack notification is sent
@@ -71,10 +76,14 @@ The following variables are available for formatting your own strings.
 - {repo}
 - {repo_url}
 - {status_message}
+- {run_url}
 - {workflow}
+- {workflow_url}
 
 You can use these to construct custom `notification_title`, `message_format` and `footer`. To get an idea see the workflow below.
 
+> In order to use `{workflow_url}`, specify as the token input as `token: ${{ secrets.GITHUB_TOKEN }}`.
+ 
 ### Minimal workflow
 
 ![](screenshots/minimal.png)
@@ -99,9 +108,10 @@ steps:
     if: always()
     with:
       status: ${{ job.status }}
+      token: ${{ secrets.GITHUB_TOKEN }}
       notification_title: '{workflow} has {status_message}'
       message_format: '{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>'
-      footer: 'Linked Repo <{repo_url}|{repo}>'
+      footer: 'Linked Repo <{repo_url}|{repo}> | <{workflow_url}|View Workflow>'
       notify_when: 'failure'
     env:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
