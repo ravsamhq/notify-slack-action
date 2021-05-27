@@ -48,26 +48,27 @@ def action_emoji(status):
         return ':large_orange_diamond:'
 
 
-def get_workflow_url():
+def get_workflow_url(inputs):
     """
     Get Workflow URL responsible for the Action run.
     """
 
     repo = os.getenv('GITHUB_REPOSITORY')
-    github_token = os.getenv('GITHUB_SECRET')
+    token = inputs['token']
+
     url = f'https://api.github.com/repos/{repo}/actions/workflows'
     headers = {
         'Accept': 'application/vnd.github.v3+json',
-        'Authorization': f'token {github_token}',
+        'Authorization': f'token {token}',
     }
     response = requests.get(url, headers=headers)
-    if response.status_code != 200:
-        return
+    if response.status_code == 200:
+        workflows = response.json()['workflows']
+        for workflow in workflows:
+            if workflow['name'] == os.getenv('GITHUB_WORKFLOW'):
+                return workflow['html_url']
 
-    workflows = response.json()['workflows']
-    for workflow in workflows:
-        if workflow['name'] == os.getenv('GITHUB_WORKFLOW'):
-            return workflow['html_url']
+    return ''
 
 
 def construct_payload(inputs):
@@ -96,7 +97,7 @@ def construct_payload(inputs):
     commit_url = f'https://github.com/{repo}/commit/{commit_sha}'
     repo_url = f'https://github.com/{repo}'
     run_url = f'https://github.com/{repo}/actions/runs/{run_id}'
-    workflow_url = get_workflow_url()
+    workflow_url = get_workflow_url(inputs)
     color = action_color(job_status)
     status_message = action_status(job_status)
     emoji = action_emoji(job_status)
@@ -183,6 +184,7 @@ def main(testing=False):
 
     inputs = {
         'job_status': os.getenv('INPUT_STATUS'),
+        'token': os.getenv('INPUT_TOKEN'),
         'notification_title': os.getenv('INPUT_NOTIFICATION_TITLE'),
         'message_format': os.getenv('INPUT_MESSAGE_FORMAT'),
         'footer': os.getenv('INPUT_FOOTER'),
