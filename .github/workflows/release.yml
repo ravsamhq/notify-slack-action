@@ -16,7 +16,7 @@ jobs:
         continue-on-error: true
         run: |
           printf "${{ toJson(github) }}"
- 
+
       - name: Set up Repository
         uses: actions/checkout@v2
         with:
@@ -28,7 +28,7 @@ jobs:
           admins="|`tr '\n' '|' < .github/admins.txt`"
           echo "::set-output name=admins::$admins"
           echo "Admins: $admins"
-  
+
   create-release:
     needs: get-admins
     if: github.event.head_commit.message == 'do-production-release' && contains(needs.get-admins.outputs.admins, format('|{0}|', github.event.head_commit.author.username))
@@ -47,7 +47,7 @@ jobs:
       - name: Install Semantic Release NPM Dependencies
         run: |
           npm i -g semantic-release @semantic-release/{commit-analyzer,release-notes-generator}
-          
+
       - name: Run Semantic Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -70,7 +70,7 @@ jobs:
       - name: Cancel if Next Version is same as Last Version
         if: (env.last_version == env.next_version) || env.next_version == ''
         uses: andymckay/cancel-action@0.2
-  
+
       - name: Get Major Version related to Next Version
         run: |
           major_version="v`echo $next_version | cut -d \. -f 1`"
@@ -81,12 +81,12 @@ jobs:
             major_version_exists="true"
           fi
           echo "major_version_exists=$major_version_exists" >> $GITHUB_ENV
-      
+
       - name: Generate Release Notes
         run: |
           release_notes=`cat temp.txt | sed '/^##/,$!d' | awk '{$1=$1};1' | sed 's/))/)/g' | sed 's/ (h/](h/g' | sed 's/^## /## [/' | sed 's/) (/)(/g' | sed 's/ (/ [/g' | sed 's/)(/) (/g' | sed 's/\w/\u&/'`
           printf "$release_notes" > RELEASE_NOTES.md
-      
+
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
@@ -112,5 +112,7 @@ jobs:
       - name: Update Major Version Release if it exists
         if: env.major_version_exists == 'true'
         run: |
+          git config user.name "Github Actions"
+          git config user.email noreply@github.com
           git tag -fa $major_version -m "chore: point $major_version to $next_version"
           git push origin $major_version --force
