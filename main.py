@@ -71,7 +71,7 @@ def construct_payload(inputs):
 
     # self constructed
     commit_url = f'https://github.com/{repo}/commit/{commit_sha}'
-    repo_url = f'https://github.com/{repo}/tree/{branch}'
+    repo_url = f'https://github.com/{repo}'
     color = action_color(job_status)
     status_message = action_status(job_status)
     emoji = action_emoji(job_status)
