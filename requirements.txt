@@ -1,15 +1,2 @@
-astroid==2.5.7
-autopep8==1.5.7
-certifi==2020.12.5
-chardet==4.0.0
-idna==2.10
-isort==5.8.0
-lazy-object-proxy==1.6.0
-mccabe==0.6.1
-pycodestyle==2.7.0
-pylint==2.8.3
-python-dotenv==0.17.1
 requests==2.25.1
-toml==0.10.2
-urllib3==1.26.5
-wrapt==1.12.1
+python-dotenv==0.17.1
