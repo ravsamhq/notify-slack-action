@@ -102,6 +102,7 @@ def construct_payload(inputs):
         commit_url=f'https://github.com/{repo}/commit/{commit_sha}',
         repo_url=f'https://github.com/{repo}',
         run_url=f'https://github.com/{repo}/actions/runs/{run_id}',
+        job_url=f'https://github.com/{repo}/runs/{job_id}',
         workflow=workflow,
         workflow_url=get_workflow_url(inputs),
         color=action_color(job_status),
