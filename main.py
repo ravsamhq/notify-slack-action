@@ -139,7 +139,7 @@ def construct_payload(inputs):
                 'text': message,
                 'fallback': title,
                 'pretext': title,
-                'color': color,
+                'color': patterns['color'],
                 'mrkdwn_in': ['text'],
                 'footer': footer,
             }
