@@ -95,64 +95,43 @@ def construct_payload(inputs):
     mention_groups_when = inputs['mention_groups_when']
 
     # self constructed
-    commit_url = f'https://github.com/{repo}/commit/{commit_sha}'
-    repo_url = f'https://github.com/{repo}'
-    run_url = f'https://github.com/{repo}/actions/runs/{run_id}'
-    job_url = f'https://github.com/{repo}/runs/{job_id}'
-    workflow_url = get_workflow_url(inputs)
-    color = action_color(job_status)
-    status_message = action_status(job_status)
-    emoji = action_emoji(job_status)
+    patterns = dict(
+        repo=repo,
+        branch=branch,
+        commit_sha=commit_sha,
+        commit_url=f'https://github.com/{repo}/commit/{commit_sha}',
+        repo_url=f'https://github.com/{repo}',
+        run_url=f'https://github.com/{repo}/actions/runs/{run_id}',
+        workflow=workflow,
+        workflow_url=get_workflow_url(inputs),
+        color=action_color(job_status),
+        status_message=action_status(job_status),
+        emoji=action_emoji(job_status),
+    )
 
     # construct notification title
-    title = title.replace('{emoji}', emoji)
-    title = title.replace('{workflow}', workflow)
-    title = title.replace('{status_message}', status_message)
-    title = title.replace('{repo}', repo)
-    title = title.replace('{repo_url}', repo_url)
-    title = title.replace('{branch}', branch)
-    title = title.replace('{commit_url}', commit_url)
-    title = title.replace('{commit_sha}', commit_sha)
-    title = title.replace('{run_url}', run_url)
-    title = title.replace('{workflow_url}', workflow_url)
-    title = title.replace('{job_url}', job_url)
+    for k, v in patterns.items():
+        title = title.replace('{%s}' % k, v)
 
     # construct the message
-    message = message.replace('{emoji}', emoji)
-    message = message.replace('{workflow}', workflow)
-    message = message.replace('{status_message}', status_message)
-    message = message.replace('{repo}', repo)
-    message = message.replace('{repo_url}', repo_url)
-    message = message.replace('{branch}', branch)
-    message = message.replace('{commit_url}', commit_url)
-    message = message.replace('{commit_sha}', commit_sha)
-    message = message.replace('{run_url}', run_url)
-    message = message.replace('{workflow_url}', workflow_url)
-    message = message.replace('{job_url}', job_url)
+    for k, v in patterns.items():
+        message = message.replace('{%s}' % k, v)
 
-    # added user mentions to the message
+    # add user mentions to the message
     if job_status in mention_users_when and mention_users.strip() != '':
         message += '\n'
         for user in mention_users.split(','):
             message = message + f'<@{user}> '
 
-    # added group mentions to the message
+    # add group mentions to the message
     if job_status in mention_groups_when and mention_groups.strip() != '':
         message += '\n'
         for group in mention_groups.split(','):
             message = message + f'<!subteam^{group}> '
 
     # construct the footer
-    footer = footer.replace('{emoji}', emoji)
-    footer = footer.replace('{workflow}', workflow)
-    footer = footer.replace('{status_message}', status_message)
-    footer = footer.replace('{repo}', repo)
-    footer = footer.replace('{repo_url}', repo_url)
-    footer = footer.replace('{branch}', branch)
-    footer = footer.replace('{commit_url}', commit_url)
-    footer = footer.replace('{commit_sha}', commit_sha)
-    footer = footer.replace('{run_url}', run_url)
-    footer = footer.replace('{workflow_url}', workflow_url)
+    for k, v in patterns.items():
+        footer = footer.replace('{%s}' % k, v)
 
     payload = {
         'attachments': [
