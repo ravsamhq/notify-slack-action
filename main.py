@@ -82,6 +82,7 @@ def construct_payload(inputs):
     branch = os.getenv('GITHUB_REF')
     commit_sha = os.getenv('GITHUB_SHA')[:7]
     run_id = os.getenv('GITHUB_RUN_ID')
+    job_id = os.getenv('GITHUB_JOB')
 
     # derived from action inputs
     job_status = inputs['job_status']
@@ -116,13 +117,13 @@ def construct_payload(inputs):
     for k, v in patterns.items():
         message = message.replace('{%s}' % k, v)
 
-    # added user mentions to the message
+    # add user mentions to the message
     if job_status in mention_users_when and mention_users.strip() != '':
         message += '\n'
         for user in mention_users.split(','):
             message = message + f'<@{user}> '
 
-    # added group mentions to the message
+    # add group mentions to the message
     if job_status in mention_groups_when and mention_groups.strip() != '':
         message += '\n'
         for group in mention_groups.split(','):
