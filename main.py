@@ -82,6 +82,7 @@ def construct_payload(inputs):
     branch = os.getenv('GITHUB_REF')
     commit_sha = os.getenv('GITHUB_SHA')[:7]
     run_id = os.getenv('GITHUB_RUN_ID')
+    job_id = os.getenv('GITHUB_JOB')
 
     # derived from action inputs
     job_status = inputs['job_status']
@@ -97,6 +98,7 @@ def construct_payload(inputs):
     commit_url = f'https://github.com/{repo}/commit/{commit_sha}'
     repo_url = f'https://github.com/{repo}'
     run_url = f'https://github.com/{repo}/actions/runs/{run_id}'
+    job_url = f'https://github.com/{repo}/runs/{job_id}'
     workflow_url = get_workflow_url(inputs)
     color = action_color(job_status)
     status_message = action_status(job_status)
@@ -113,6 +115,7 @@ def construct_payload(inputs):
     title = title.replace('{commit_sha}', commit_sha)
     title = title.replace('{run_url}', run_url)
     title = title.replace('{workflow_url}', workflow_url)
+    title = title.replace('{job_url}', job_url)
 
     # construct the message
     message = message.replace('{emoji}', emoji)
@@ -125,6 +128,7 @@ def construct_payload(inputs):
     message = message.replace('{commit_sha}', commit_sha)
     message = message.replace('{run_url}', run_url)
     message = message.replace('{workflow_url}', workflow_url)
+    message = message.replace('{job_url}', job_url)
 
     # added user mentions to the message
     if job_status in mention_users_when and mention_users.strip() != '':

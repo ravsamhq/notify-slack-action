@@ -1,4 +1,4 @@
-[![Create Release](https://github.com/ravsamhq/metafold-store-frontend/actions/workflows/release.yml/badge.svg)](https://github.com/ravsamhq/metafold-store-frontend/actions/workflows/release.yml)
+[![Create Release](https://github.com/ravsamhq/notify-slack-action/actions/workflows/release.yml/badge.svg)](https://github.com/ravsamhq/notify-slack-action/actions/workflows/release.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 # Notify Slack Action
@@ -99,6 +99,7 @@ The following variables are available for formatting your own strings.
 - {repo_url}
 - {status_message}
 - {run_url}
+- {job_url}
 - {workflow}
 - {workflow_url}
 
