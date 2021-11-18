@@ -99,7 +99,7 @@ The following variables are available for formatting your own strings.
 - {repo_url}
 - {status_message}
 - {run_url}
-- {job_url}
+- {job}
 - {workflow}
 - {workflow_url}
 

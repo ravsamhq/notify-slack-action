@@ -82,7 +82,7 @@ def construct_payload(inputs):
     branch = os.getenv('GITHUB_REF')
     commit_sha = os.getenv('GITHUB_SHA')[:7]
     run_id = os.getenv('GITHUB_RUN_ID')
-    job_id = os.getenv('GITHUB_JOB')
+    job = os.getenv('GITHUB_JOB')
 
     # derived from action inputs
     job_status = inputs['job_status']
@@ -102,6 +102,7 @@ def construct_payload(inputs):
         commit_url=f'https://github.com/{repo}/commit/{commit_sha}',
         repo_url=f'https://github.com/{repo}',
         run_url=f'https://github.com/{repo}/actions/runs/{run_id}',
+        job=job,
         workflow=workflow,
         workflow_url=get_workflow_url(inputs),
         color=action_color(job_status),
