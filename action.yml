@@ -41,6 +41,18 @@ inputs:
     description: Specify on which events you want to mention the groups
     required: false
     default: "success,failure,warnings"
+  icon_success:
+    description: Specify on icon to be used when event is success
+    required: false
+    default: ":heavy_check_mark:"
+  icon_failure:
+    description: Specify on icon to be used when event is failure
+    required: false
+    default: ":x:"
+  icon_warnings:
+    description: Specify on icon to be used when event is warnings
+    required: false
+    default: ":large_orange_diamond:"
 
 branding:
   icon: send

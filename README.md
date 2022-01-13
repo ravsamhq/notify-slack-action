@@ -11,6 +11,7 @@ Send Github Actions workflow status notifications to Slack regarding failures, w
 - [x] Custom Notification Title, Message and Footer using template variables
 - [x] Mention Users and control when to mention them
 - [x] Mention Users Groups and control when to mention them
+- [x] Customize icons based on the action status
 
 ## Example workflows
  
@@ -132,7 +133,7 @@ message_format:
 footer:
   description: Specify the footer of the message
   required: false
-  default: "<{run_url}|View Run> | Developed by <https://www.ravsam.in|RavSam>"
+  default: '<{run_url}|View Run> | Developed by <https://www.ravsam.in|RavSam>'
 
 notify_when:
   description: Specify on which events a slack notification is sent
@@ -158,6 +159,21 @@ mention_groups_when:
   description: Specify on which events you want to mention the groups
   required: false
   default: 'success,failure,warnings'
+
+icon_success:
+    description: Specify on icon to be used when event is success
+    required: false
+    default: ':heavy_check_mark:'
+
+icon_failure:
+  description: Specify on icon to be used when event is failure
+  required: false
+  default: ':x:'
+
+icon_warnings:
+  description: Specify on icon to be used when event is warnings
+  required: false
+  default: ':large_orange_diamond:'
 ```
 
 ## Tech Stack

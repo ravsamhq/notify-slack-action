@@ -35,17 +35,17 @@ def action_status(status):
         return 'passed with warnings'
 
 
-def action_emoji(status):
+def action_emoji(status, icon_success, icon_failure, icon_warnings):
     """
     Get an emoji based on the workflow status.
     """
 
     if status == 'success':
-        return ':heavy_check_mark:'
+        return icon_success
     elif status == 'failure':
-        return ':x:'
+        return icon_failure
     else:
-        return ':large_orange_diamond:'
+        return icon_warnings
 
 
 def get_workflow_url(inputs):
@@ -93,6 +93,9 @@ def construct_payload(inputs):
     mention_users_when = inputs['mention_users_when']
     mention_groups = inputs['mention_groups']
     mention_groups_when = inputs['mention_groups_when']
+    icon_success = inputs['icon_success']
+    icon_failure = inputs['icon_failure']
+    icon_warnings = inputs['icon_warnings']
 
     # self constructed
     patterns = dict(
@@ -107,7 +110,7 @@ def construct_payload(inputs):
         workflow_url=get_workflow_url(inputs),
         color=action_color(job_status),
         status_message=action_status(job_status),
-        emoji=action_emoji(job_status),
+        emoji=action_emoji(job_status, icon_success, icon_failure, icon_warnings),
     )
 
     # construct notification title
@@ -177,6 +180,9 @@ def main(testing=False):
         'mention_users_when': os.getenv('INPUT_MENTION_USERS_WHEN'),
         'mention_groups': os.getenv('INPUT_MENTION_GROUPS'),
         'mention_groups_when': os.getenv('INPUT_MENTION_GROUPS_WHEN'),
+        'icon_success': os.getenv('INPUT_ICON_SUCCESS'),
+        'icon_failure': os.getenv('INPUT_ICON_FAILURE'),
+        'icon_warnings': os.getenv('INPUT_ICON_WARNINGS'),
     }
 
     payload = construct_payload(inputs)
