@@ -220,4 +220,4 @@ This project uses [SemVer](http://semver.org/) for versioning. For the versions 
 - We are open for [issues and feature requests](https://github.com/ravsamhq/notify-slack-action/issues).
 - In case you get stuck at somewhere, feel free to contact at our [Mail](mailto:info@ravsam.in).
 
-<small>&copy; 2021 RavSam Web Solutions</small>
+<small>&copy; 2022 RavSam Web Solutions</small>
