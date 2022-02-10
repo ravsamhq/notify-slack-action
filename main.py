@@ -138,12 +138,6 @@ def construct_payload(inputs):
             else:
                 message = message + f'<!subteam^{group}> '
 
-    # add group mentions to the message
-    if job_status in mention_groups_when and mention_groups.strip() != '':
-        message += '\n'
-        for group in mention_groups.split(','):
-            message = message + f'<!subteam^{group}> '
-
     # construct the footer
     for k, v in patterns.items():
         footer = footer.replace('{%s}' % k, v)
