@@ -90,6 +90,12 @@ steps:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 ```
 
+To mention a channel, you can configure the `mention_groups` key like:
+
+```yaml
+mention_groups: 'SAZ94GDB8,!channel'
+```
+
 The following variables are available for formatting your own strings.
 
 - {branch}

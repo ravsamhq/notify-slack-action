@@ -131,6 +131,17 @@ def construct_payload(inputs):
     if job_status in mention_groups_when and mention_groups.strip() != '':
         message += '\n'
         for group in mention_groups.split(','):
+            # useful for mentions like @channel
+            # to mention a channel programmatically, we need to do <!channel>
+            if group.strip()[0] == '!':
+                message = message + f'<{group}> '
+            else:
+                message = message + f'<!subteam^{group}> '
+
+    # add group mentions to the message
+    if job_status in mention_groups_when and mention_groups.strip() != '':
+        message += '\n'
+        for group in mention_groups.split(','):
             message = message + f'<!subteam^{group}> '
 
     # construct the footer
