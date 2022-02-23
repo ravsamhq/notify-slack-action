@@ -79,7 +79,7 @@ def construct_payload(inputs):
     # derived from workflow environment
     workflow = os.getenv('GITHUB_WORKFLOW')
     repo = os.getenv('GITHUB_REPOSITORY')
-    branch = os.getenv('GITHUB_REF')
+    branch = os.getenv('GITHUB_REF_NAME')
     commit_sha = os.getenv('GITHUB_SHA')[:7]
     run_id = os.getenv('GITHUB_RUN_ID')
     job = os.getenv('GITHUB_JOB')
@@ -147,7 +147,6 @@ def construct_payload(inputs):
             {
                 'text': message,
                 'fallback': title,
-                'pretext': title,
                 'color': patterns['color'],
                 'mrkdwn_in': ['text'],
                 'footer': footer,
