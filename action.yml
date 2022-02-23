@@ -12,7 +12,7 @@ inputs:
   notification_title:
     description: Specify on the notification message title
     required: false
-    default: "New Github Action Run"
+    default: "{workflow}: {job} has {status_message} on {branch}"
   message_format:
     description: Specify on the notification message format
     required: false
