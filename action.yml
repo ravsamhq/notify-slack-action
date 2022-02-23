@@ -16,15 +16,15 @@ inputs:
   message_format:
     description: Specify on the notification message format
     required: false
-    default: "{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}@{branch}> on <{commit_url}|{commit_sha}>"
+    default: "{emoji} *<{run_url}|{workflow}: {job}>* {status_message} on <{commit_url}|{commit_sha}>"
   footer:
     description: Specify the footer of the message
     required: false
-    default: "<{run_url}|View Run> | Developed by <https://www.ravsam.in|RavSam>"
+    default: "*<{repo_url}|{repo}>* on branch *<{repo_url}/tree/{branch}|{branch}>*"
   notify_when:
     description: Specify on which events a slack notification is sent
     required: false
-    default: "success,failure,warnings"
+    default: "failure"
   mention_users:
     description: Specify the slack IDs of users you want to mention
     required: false
