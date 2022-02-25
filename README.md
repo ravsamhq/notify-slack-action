@@ -38,10 +38,9 @@ steps:
     if: always()
     with:
       status: ${{ job.status }}
-      token: ${{ secrets.GITHUB_TOKEN }}
       notification_title: '{workflow} has {status_message}'
       message_format: '{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>'
-      footer: 'Linked Repo <{repo_url}|{repo}> | <{workflow_url}|View Workflow>'
+      footer: 'From <{repo_url}|{repo}>'
       notify_when: 'failure'
     env:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -107,11 +106,8 @@ The following variables are available for formatting your own strings.
 - {run_url}
 - {job}
 - {workflow}
-- {workflow_url}
 
 You can use these to construct custom `notification_title`, `message_format` and `footer`.
-
-> In order to use `{workflow_url}`, specify as the token input as `token: ${{ secrets.GITHUB_TOKEN }}`.
 
 ## Inputs
 
@@ -119,11 +115,6 @@ You can use these to construct custom `notification_title`, `message_format` and
 status:
   description: Job Status
   required: true
-
-token:
-  description: Github Token for accessing workflow url
-  required: false
-  default: ''
 
 notification_title:
   description: Specify on the notification message title
