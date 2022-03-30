@@ -53,10 +53,11 @@ def get_workflow_url(inputs):
     Get Workflow URL responsible for the Action run.
     """
 
+    api = os.getenv('GITHUB_API_URL')
     repo = os.getenv('GITHUB_REPOSITORY')
     token = inputs['token']
 
-    url = f'https://api.github.com/repos/{repo}/actions/workflows'
+    url = f'{api}/repos/{repo}/actions/workflows'
     headers = {
         'Accept': 'application/vnd.github.v3+json',
         'Authorization': f'token {token}',
@@ -77,6 +78,7 @@ def construct_payload(inputs):
     """
 
     # derived from workflow environment
+    server = os.getenv('GITHUB_SERVER_URL')
     workflow = os.getenv('GITHUB_WORKFLOW')
     repo = os.getenv('GITHUB_REPOSITORY')
     branch = os.getenv('GITHUB_REF')
@@ -102,9 +104,9 @@ def construct_payload(inputs):
         repo=repo,
         branch=branch,
         commit_sha=commit_sha,
-        commit_url=f'https://github.com/{repo}/commit/{commit_sha}',
-        repo_url=f'https://github.com/{repo}',
-        run_url=f'https://github.com/{repo}/actions/runs/{run_id}',
+        commit_url=f'{server}/{repo}/commit/{commit_sha}',
+        repo_url=f'{server}/{repo}',
+        run_url=f'{server}/{repo}/actions/runs/{run_id}',
         job=job,
         workflow=workflow,
         workflow_url=get_workflow_url(inputs),
