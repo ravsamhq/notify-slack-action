@@ -114,6 +114,33 @@ You can use these to construct custom `notification_title`, `message_format` and
 
 > In order to use `{workflow_url}`, specify as the token input as `token: ${{ secrets.GITHUB_TOKEN }}`.
 
+The above mentioned strings are available by default. However, you can use the following method to ue any kind of data available in GitHub Actions:
+
+1. Add the following step to get all the information related to your Github context
+```yml
+steps:
+  - run: echo "${{ toJson(github) }}"
+```
+
+2. Then you can reference the `github` object properties:
+```
+github.event.head_commit.author.name
+github.event.head_commit.message
+```
+
+as
+
+```yml
+steps:
+  - uses: ravsamhq/notify-slack-action@v1
+    if: always()
+    with:
+      ...
+      message_format: '{emoji} ${{ github.event.head_commit.author.name }} ${{ github.event.head_commit.message }}'
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+```
+
 ## Inputs
 
 ```yml
