@@ -1,4 +1,4 @@
-FROM python:3-slim AS builder
+FROM public.ecr.aws/docker/library/python:3-slim AS builder
 ADD . /app
 WORKDIR /app
 
