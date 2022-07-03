@@ -1,4 +1,4 @@
-import { getInput, setFailed, info } from "@actions/core"
+import { getInput, setFailed } from "@actions/core"
 import { context } from "@actions/github"
 import fetch from "node-fetch"
 
@@ -66,6 +66,8 @@ const getMentionGroups = (status: JobStatus) => {
 }
 
 const getWorkflowUrl = async (repo: string, name: string) => {
+  if (process.env.NODE_ENV === "test") return "test-workflow-url"
+
   const api = context.apiUrl
   const token = getInput("token")
 
@@ -90,7 +92,7 @@ const getWorkflowUrl = async (repo: string, name: string) => {
   return ""
 }
 
-const buildPayload = async () => {
+export const buildPayload = async () => {
   const repo = `${context.repo.owner}/${context.repo.repo}`
   const repoUrl = `${context.serverUrl}/${repo}`
   const jobStatus = getInput("status") as JobStatus
@@ -149,7 +151,6 @@ const run = async () => {
     if (!notifyWhen.includes(jobStatus)) return
 
     const payload = await buildPayload()
-    info(payload)
     await notifySlack(payload)
   } catch (e) {
     if (e instanceof Error) setFailed(e.message)

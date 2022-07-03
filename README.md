@@ -21,7 +21,7 @@ Send Github Actions workflow status notifications to Slack regarding failures, w
 
 ```yaml
 steps:
-  - uses: ravsamhq/notify-slack-action@v1
+  - uses: ravsamhq/notify-slack-action@v2
     if: always()
     with:
       status: ${{ job.status }} # required
@@ -35,7 +35,7 @@ steps:
 
 ```yaml
 steps:
-  - uses: ravsamhq/notify-slack-action@v1
+  - uses: ravsamhq/notify-slack-action@v2
     if: always()
     with:
       status: ${{ job.status }}
@@ -54,7 +54,7 @@ steps:
 
 ```yaml
 steps:
-  - uses: ravsamhq/notify-slack-action@v1
+  - uses: ravsamhq/notify-slack-action@v2
     if: always()
     with:
       status: ${{ job.status }}
@@ -74,7 +74,7 @@ steps:
 
 ```yaml
 steps:
-  - uses: ravsamhq/notify-slack-action@v1
+  - uses: ravsamhq/notify-slack-action@v2
     if: always()
     with:
       status: ${{ job.status }}
@@ -134,7 +134,7 @@ as
 
 ```yml
 steps:
-  - uses: ravsamhq/notify-slack-action@v1
+  - uses: ravsamhq/notify-slack-action@v2
     if: always()
     with:
       ...
@@ -224,6 +224,12 @@ cd notify-slack-action
 
 # install dependencies
 npm install
+```
+
+Before commit run (dist folder should be included):
+
+```bash
+npm run all
 ```
 
 ## Versioning
