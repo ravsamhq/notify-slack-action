@@ -244,7 +244,8 @@ This project uses [SemVer](http://semver.org/) for versioning. For the versions 
 
 - [Ravgeet Dhillon](https://github.com/ravgeetdhillon)
 - [Jirka Borovec](https://github.com/Borda)
-- [Vlad Pronsky](https://github.com/vladkens)
+
+> Special shoutout to [Vlad Pronsky](https://github.com/vladkens) for porting the Python action to Typescript.
 
 ## Extra
 
