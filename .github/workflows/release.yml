@@ -39,10 +39,17 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Get Node Version
+        id: node_version
+        run: |
+          node_version=`cat .nvmrc`
+          echo "::set-output name=node_version::$node_version"
+          echo "Node Version: $node_version"
+
       - name: Set up Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: 14
+          node-version: ${{ steps.node_version.outputs.node_version }}
 
       - name: Install Semantic Release NPM Dependencies
         run: |
