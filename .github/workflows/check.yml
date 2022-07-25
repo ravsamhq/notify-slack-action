@@ -1,0 +1,52 @@
+name: Check dist & test
+
+on:
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Cache NPM Dependencies
+        id: cache-npm-dependencies
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node_modules-
+
+      - name: Install NPM Dependencies if not cached
+        if: steps.cache-npm-dependencies.outputs.cache-hit != 'true'
+        run: |
+          npm install
+
+      - name: Build Action
+        run: npm run build
+
+      - name: Lint Action
+        run: npm run lint
+
+      - name: Test Action
+        run: npm run test
+
+      - name: Package Action
+        run: npm run package
+
+      - name: Commit if dist has changed
+        run: |
+          if [ $(git status dist --porcelain=v1 2>/dev/null | wc -l) != "0" ]; then
+            git add dist
+            git commit -m "chore: updated dist with new code"
+            git push origin HEAD --force
+          fi
