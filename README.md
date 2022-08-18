@@ -21,7 +21,7 @@ Send Github Actions workflow status notifications to Slack regarding failures, w
 
 ```yaml
 steps:
-  - uses: ravsamhq/notify-slack-action@v1
+  - uses: ravsamhq/notify-slack-action@v2
     if: always()
     with:
       status: ${{ job.status }} # required
@@ -35,7 +35,7 @@ steps:
 
 ```yaml
 steps:
-  - uses: ravsamhq/notify-slack-action@v1
+  - uses: ravsamhq/notify-slack-action@v2
     if: always()
     with:
       status: ${{ job.status }}
@@ -54,7 +54,7 @@ steps:
 
 ```yaml
 steps:
-  - uses: ravsamhq/notify-slack-action@v1
+  - uses: ravsamhq/notify-slack-action@v2
     if: always()
     with:
       status: ${{ job.status }}
@@ -74,7 +74,7 @@ steps:
 
 ```yaml
 steps:
-  - uses: ravsamhq/notify-slack-action@v1
+  - uses: ravsamhq/notify-slack-action@v2
     if: always()
     with:
       status: ${{ job.status }}
@@ -134,7 +134,7 @@ as
 
 ```yml
 steps:
-  - uses: ravsamhq/notify-slack-action@v1
+  - uses: ravsamhq/notify-slack-action@v2
     if: always()
     with:
       ...
@@ -226,12 +226,6 @@ cd notify-slack-action
 npm install
 ```
 
-Before commit run (dist folder should be included):
-
-```bash
-npm run all
-```
-
 ## Versioning
 
 This project uses [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/ravsamhq/notify-slack-action/tags).
@@ -244,8 +238,9 @@ This project uses [SemVer](http://semver.org/) for versioning. For the versions 
 
 - [Ravgeet Dhillon](https://github.com/ravgeetdhillon)
 - [Jirka Borovec](https://github.com/Borda)
+- [Vlad Pronsky](https://github.com/vladkens)
 
-> Special shoutout to [Vlad Pronsky](https://github.com/vladkens) for porting the Python action to Typescript.
+> Special shoutout to [Vlad Pronsky](https://github.com/vladkens) for porting the original Python based code to Typescript.
 
 ## Extra
 
