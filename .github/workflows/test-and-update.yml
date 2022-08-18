@@ -1,4 +1,4 @@
-name: Check dist & test
+name: Test and Update dist
 
 on:
   pull_request:
