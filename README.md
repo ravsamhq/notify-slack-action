@@ -112,11 +112,11 @@ The following variables are available for formatting your own strings.
 
 You can use these to construct custom `notification_title`, `message_format` and `footer`.
 
-> In order to use `{workflow_url}`, specify as the token input as `token: ${{ secrets.GITHUB_TOKEN }}`.
+> In order to use `{workflow_url}`, specify the `token` input as `token: ${{ secrets.GITHUB_TOKEN }}`.
 
-The above mentioned strings are available by default. However, you can use the following method to ue any kind of data available in GitHub Actions:
+The above mentioned strings are available by default. However, you can use the following method to use any kind of data available in GitHub Actions:
 
-1. Add the following step to get all the information related to your Github context
+1. Add the following step to get all the information related to your GitHub context
 
 ```yml
 steps:
