@@ -2,23 +2,26 @@ import { getInput, setFailed } from "@actions/core"
 import { context } from "@actions/github"
 import fetch from "node-fetch"
 
-type JobStatus = "success" | "failure" | "warning"
+type JobStatus = "success" | "failure" | "cancelled" | "warning"
 
 const actionColor = (status: JobStatus) => {
   if (status === "success") return "good"
   if (status === "failure") return "danger"
+  if (status === "cancelled") return "cancelled"
   return "warning"
 }
 
 const actionStatus = (status: JobStatus) => {
   if (status === "success") return "passed"
   if (status === "failure") return "failed"
+  if (status === "cancelled") return "cancelled"
   return "passed with warnings"
 }
 
 const actionEmoji = (status: JobStatus) => {
   if (status === "success") return getInput("icon_success")
   if (status === "failure") return getInput("icon_failure")
+  if (status === "cancelled") return getInput("icon_failure")
   return getInput("icon_warnings")
 }
 
