@@ -50,5 +50,5 @@ jobs:
           if [ $(git status dist --porcelain=v1 2>/dev/null | wc -l) != "0" ]; then
             git add dist
             git commit -m "chore: updated dist with new code"
-            git push --force
+            git push origin HEAD:${{ github.ref }} --force
           fi
