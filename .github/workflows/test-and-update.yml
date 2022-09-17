@@ -45,6 +45,7 @@ jobs:
 
       - name: Commit if dist has changed
         run: |
+          echo "${{ toJson(github) }}"
           git config user.name "Github Actions"
           git config user.email noreply@github.com
           if [ $(git status dist --porcelain=v1 2>/dev/null | wc -l) != "0" ]; then
