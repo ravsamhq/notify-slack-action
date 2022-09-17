@@ -205,6 +205,11 @@ icon_failure:
   required: false
   default: ":x:"
 
+icon_cancelled:
+  description: Specify on icon to be used when event is cancelled
+  required: false
+  default: ":x:"
+
 icon_warnings:
   description: Specify on icon to be used when event is warnings
   required: false

@@ -7,7 +7,7 @@ type JobStatus = "success" | "failure" | "cancelled" | "warning"
 const actionColor = (status: JobStatus) => {
   if (status === "success") return "good"
   if (status === "failure") return "danger"
-  if (status === "cancelled") return "cancelled"
+  if (status === "cancelled") return "danger"
   return "warning"
 }
 
@@ -21,7 +21,7 @@ const actionStatus = (status: JobStatus) => {
 const actionEmoji = (status: JobStatus) => {
   if (status === "success") return getInput("icon_success")
   if (status === "failure") return getInput("icon_failure")
-  if (status === "cancelled") return getInput("icon_failure")
+  if (status === "cancelled") return getInput("icon_cancelled")
   return getInput("icon_warnings")
 }
 
