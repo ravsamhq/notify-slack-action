@@ -101,8 +101,9 @@ export const buildPayload = async () => {
   const jobStatus = getInput("status") as JobStatus
 
   const patterns: Record<string, string> = {
-    repo: repo,
+    repo,
     branch: context.ref,
+    branch_url: `${repoUrl}/tree/${context.ref.replace("refs/heads/", "")}`,
     commit_sha: context.sha.substring(0, 7),
     commit_url: `${repoUrl}/commit/${context.sha}`,
     repo_url: `${repoUrl}`,
