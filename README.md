@@ -173,7 +173,7 @@ footer:
 notify_when:
   description: Specify on which events a slack notification is sent
   required: false
-  default: "success,failure,warnings"
+  default: "success,failure,cancelled,warnings"
 
 mention_users:
   description: Specify the slack IDs of users you want to mention.
@@ -183,7 +183,7 @@ mention_users:
 mention_users_when:
   description: Specify on which events you want to mention the users
   required: false
-  default: "success,failure,warnings"
+  default: "success,failure,cancelled,warnings"
 
 mention_groups:
   description: Specify the slack IDs of groups you want to mention
@@ -193,7 +193,7 @@ mention_groups:
 mention_groups_when:
   description: Specify on which events you want to mention the groups
   required: false
-  default: "success,failure,warnings"
+  default: "success,failure,cancelled,warnings"
 
 icon_success:
   description: Specify on icon to be used when event is success
@@ -202,6 +202,11 @@ icon_success:
 
 icon_failure:
   description: Specify on icon to be used when event is failure
+  required: false
+  default: ":x:"
+
+icon_cancelled:
+  description: Specify on icon to be used when event is cancelled
   required: false
   default: ":x:"
 
