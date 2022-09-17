@@ -45,6 +45,8 @@ jobs:
 
       - name: Commit if dist has changed
         run: |
+          git config user.name "Github Actions"
+          git config user.email noreply@github.com
           if [ $(git status dist --porcelain=v1 2>/dev/null | wc -l) != "0" ]; then
             git add dist
             git commit -m "chore: updated dist with new code"
