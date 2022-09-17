@@ -99,6 +99,7 @@ mention_groups: "SAZ94GDB8,!channel"
 The following variables are available for formatting your own strings.
 
 - {branch}
+- {branch_url}
 - {commit_url}
 - {commit_sha}
 - {emoji}
