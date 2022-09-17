@@ -15,6 +15,7 @@ const buildPayload = async (env?: Record<string, string>) => {
     GITHUB_WORKFLOW: "test-workflow",
     GITHUB_REPOSITORY: "test/test",
     GITHUB_SHA: "2fa67bb0998a39d9b697772782aa94599cfda489",
+    GITHUB_REF: "refs/heads/test-patch-1",
     INPUT_ICON_SUCCESS: ":DONE:",
     INPUT_ICON_FAILURE: ":FAIL:",
     ...env,
@@ -64,11 +65,14 @@ test("expanded workflow", async () => {
   const rep = await getAttachment({
     INPUT_STATUS: "success",
     INPUT_NOTIFICATION_TITLE: "{workflow} has {status_message}",
-    INPUT_MESSAGE_FORMAT: "{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>",
+    INPUT_MESSAGE_FORMAT:
+      "{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}> on <{branch_url}|{branch}>",
     INPUT_FOOTER: "Linked Repo <{repo_url}|{repo}> | <{workflow_url}|View Workflow>",
   })
 
-  expect(rep.text).toBe(":DONE: *test-workflow* passed in <https://github.com/test/test|test/test>")
+  expect(rep.text).toBe(
+    ":DONE: *test-workflow* passed in <https://github.com/test/test|test/test> on <https://github.com/test/test/tree/test-patch-1|refs/heads/test-patch-1>"
+  )
   expect(rep.fallback).toBe("test-workflow has passed")
   expect(rep.pretext).toBe("test-workflow has passed")
   expect(rep.color).toBe("good")
