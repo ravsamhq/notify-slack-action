@@ -27,7 +27,7 @@ const actionEmoji = (status: JobStatus) => {
 
 const makeMessage = (template: string, values: Record<string, string>) => {
   for (const k of Object.keys(values)) {
-    template = template.replace(`{${k}}`, values[k])
+    template = template.replaceAll(`{${k}}`, values[k])
   }
   return template
 }
