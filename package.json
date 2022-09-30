@@ -25,7 +25,7 @@
     "@types/node-fetch": "^2.6.2",
     "@typescript-eslint/parser": "5.38.1",
     "@vercel/ncc": "^0.34.0",
-    "eslint": "8.21.0",
+    "eslint": "8.24.0",
     "eslint-plugin-github": "4.3.7",
     "eslint-plugin-jest": "^26.5.3",
     "jest": "28.1.3",
