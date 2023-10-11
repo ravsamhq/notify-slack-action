@@ -162,7 +162,7 @@ const sendSlackMessageWithToken = async (token: string, payload: Attachment) => 
   const web = new WebClient(token)
   const result = await web.chat.postMessage({
     attachments: [payload],
-    channel: process.env.SLACK_CHANNEL_ID || "#general",
+    channel: process.env.SLACK_CHANNEL_ID || "#tiger-team-internal",
   })
 
   if (result.ok) {
