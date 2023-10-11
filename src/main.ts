@@ -1,5 +1,6 @@
 import { getInput, setFailed } from "@actions/core"
 import { context } from "@actions/github"
+import { WebClient } from "@slack/web-api"
 import fetch from "node-fetch"
 
 type JobStatus = "success" | "failure" | "cancelled" | "warning" | "skipped"
@@ -127,7 +128,7 @@ export const buildPayload = async () => {
     .filter((x) => x.length > 0)
     .join("\n")
 
-  const attachment = {
+  const attachment: Attachment = {
     text: text,
     fallback: title,
     pretext: title,
@@ -136,19 +137,57 @@ export const buildPayload = async () => {
     footer: footer,
   }
 
-  const payload = { attachments: [attachment] }
-  return JSON.stringify(payload)
+  return attachment
 }
 
-const notifySlack = async (payload: string) => {
-  const webhookUrl = process.env.SLACK_WEBHOOK_URL
-  if (!webhookUrl) throw new Error("No SLACK_WEBHOOK_URL provided")
+interface Attachment {
+  [key: string]: any
+}
 
-  fetch(webhookUrl, {
+const sendSlackMessageWithWebhook = async (webhookUrl: string, payload: string) => {
+  const response = await fetch(webhookUrl, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: payload,
   })
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to send message to Slack webhook: ${response.status} - ${response.statusText}`
+    )
+  }
+}
+
+const sendSlackMessageWithToken = async (token: string, payload: Attachment) => {
+  const web = new WebClient(token)
+  const result = await web.chat.postMessage({
+    attachments: [payload],
+    channel: process.env.SLACK_CHANNEL_ID || "#general",
+  })
+
+  if (result.ok) {
+    console.log(`Message sent to Slack: ${result.ts}`)
+  } else {
+    console.error(`Failed to send message to Slack: ${result.error}`)
+  }
+}
+
+const notifySlack = async (payload: Attachment) => {
+  const slackWebhookUrl = process.env.SLACK_WEBHOOK_URL
+  const slackBotToken = process.env.SLACK_BOT_TOKEN
+
+  if (slackWebhookUrl && slackBotToken) {
+    throw new Error("Both SLACK_WEBHOOK_URL and SLACK_BOT_TOKEN provided. Please only provide one.")
+  }
+
+  if (slackWebhookUrl) {
+    const msg = { attachments: [payload] }
+    await sendSlackMessageWithWebhook(slackWebhookUrl, JSON.stringify(msg))
+  } else if (slackBotToken) {
+    await sendSlackMessageWithToken(slackBotToken, payload)
+  } else {
+    throw new Error("No SLACK_WEBHOOK_URL or SLACK_BOT_TOKEN provided.")
+  }
 }
 
 const run = async () => {
@@ -157,8 +196,9 @@ const run = async () => {
     const jobStatus = getInput("status") as JobStatus
     if (!notifyWhen.includes(jobStatus)) return
 
-    const payload = await buildPayload()
-    await notifySlack(payload)
+    const attach = await buildPayload()
+
+    await notifySlack(attach)
   } catch (e) {
     if (e instanceof Error) setFailed(e.message)
   }
