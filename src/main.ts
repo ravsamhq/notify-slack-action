@@ -176,7 +176,7 @@ const notifySlack = async (payload: Attachment) => {
   const slackWebhookUrl = process.env.SLACK_WEBHOOK_URL || undefined
   const slackBotToken = process.env.SLACK_BOT_TOKEN || undefined
 
-  if (!slackWebhookUrl && !slackBotToken) {
+  if (slackWebhookUrl && slackBotToken) {
     throw new Error("Both SLACK_WEBHOOK_URL and SLACK_BOT_TOKEN provided. Please only provide one.")
   }
 
