@@ -12,10 +12,17 @@ jobs:
       - name: Set up Repository
         uses: actions/checkout@v3
 
+      - name: Get Node Version
+        id: node_version
+        run: |
+          node_version=`cat .nvmrc`
+          echo "::set-output name=node_version::$node_version"
+          echo "Node Version: $node_version"
+
       - name: Set up Node
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: ${{ steps.node_version.outputs.node_version }}
 
       - name: Cache NPM Dependencies
         id: cache-npm-dependencies
