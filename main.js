@@ -130,8 +130,8 @@ function constructPayload(inputs, callback) {
 
 // Send a Slack notification
 function notifySlack(payload) {
+    console.log("Sending message to Slack...");
     const url = new URL(process.env.SLACK_WEBHOOK_URL);
-
     const options = {
         hostname: url.hostname,
         port: 443,
@@ -141,8 +141,8 @@ function notifySlack(payload) {
             "Content-Type": "application/json",
             "Content-Length": payload.length,
         },
+        agent: new https.Agent({ keepAlive: false }),
     };
-
     const req = https.request(options, res => {
         if (res.statusCode === 200) {
             console.log("Sent message to Slack OK");
@@ -150,7 +150,6 @@ function notifySlack(payload) {
             console.log("Failed to post to Slack!", res);
         }
     });
-
     req.write(payload);
     req.end();
 }
