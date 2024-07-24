@@ -29,6 +29,23 @@ steps:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
 ```
 
+### Running a workflow only on the specified branch
+
+To run the notifier for a specific branch, you can utilize the either `github.ref_name` for pushes or `github.head_ref` for pull requests. For example, if you want to run the notifier only on the **origin/main** branch for pushes the following would constrain the workflow to that branch:
+
+```yaml
+steps:
+  - name: Notify Slack Action
+    uses: ravsamhq/notify-slack-action@2.3.0
+    if: ${{ always() && github.ref_name == 'main' }}
+    with:
+      status: ${{ job.status }}
+      notify_when: "failure"
+      notification_title: "{workflow} is failing"
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.ACTION_MONITORING_SLACK }}
+```
+
 ### Extended Example without User Mentions
 
 ![](screenshots/without-mentions.png)
@@ -43,7 +60,6 @@ steps:
       notification_title: "{workflow} has {status_message}"
       message_format: "{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>"
       footer: "Linked Repo <{repo_url}|{repo}> | <{workflow_url}|View Workflow>"
-      notify_when: "failure"
     env:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 ```
