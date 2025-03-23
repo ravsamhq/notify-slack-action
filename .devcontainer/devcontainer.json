@@ -27,6 +27,6 @@
   "postCreateCommand": "npm install",
   "mounts": [
     "type=bind,source=${localWorkspaceFolder},target=/work",
-    "type=bind,source=/home/${localEnv:USER}/.ssh,target=/home/vscode/.ssh,readonly"
+    "type=bind,source=/home/${localEnv:USER}/.ssh,target=/home/node/.ssh,readonly"
   ]
 }
