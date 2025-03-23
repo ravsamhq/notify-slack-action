@@ -1,0 +1,32 @@
+{
+  "name": "Node.js",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-20-bullseye",
+  "features": {
+    "ghcr.io/gvatsal60/dev-container-features/pre-commit": {},
+    "ghcr.io/eitsupi/devcontainer-features/go-task:latest": {},
+    "ghcr.io/devcontainers-extra/features/shfmt:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {},
+      "extensions": [
+        "ms-python.python",
+        "Github.copilot",
+        "kameshkotwani.google-search",
+        "lacroixdavid1.vscode-format-context-menu",
+        "task.vscode-task",
+        "redhat.vscode-yaml",
+        "esbenp.prettier-vscode",
+        "editorconfig.editorconfig",
+        "davidanson.vscode-markdownlint",
+        "foxundermoon.shell-format",
+        "gruntfuggly.todo-tree"
+      ]
+    }
+  },
+  "postCreateCommand": "npm install",
+  "mounts": [
+    "type=bind,source=${localWorkspaceFolder},target=/work",
+    "type=bind,source=/home/${localEnv:USER}/.ssh,target=/home/vscode/.ssh,readonly"
+  ]
+}

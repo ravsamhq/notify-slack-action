@@ -61,6 +61,10 @@ inputs:
     description: Specify on icon to be used when event is skipped
     required: false
     default: ":fast_forward:"
+  action_buttons:
+    description: Specify action buttons in JSON format (e.g., [{"text": "Retry", "url": "https://example.com/retry"}])
+    required: false
+    default: "[]"
 
 branding:
   icon: send

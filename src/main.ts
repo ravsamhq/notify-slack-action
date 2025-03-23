@@ -99,6 +99,14 @@ const getWorkflowUrl = async (repo: string, name: string) => {
   return ""
 }
 
+const parseActionButtons = (value: string) => {
+  try {
+    return JSON.parse(value) as { text: string; url: string }[]
+  } catch {
+    throw new Error("Invalid JSON format for action_buttons input.")
+  }
+}
+
 export const buildPayload = async () => {
   const repo = `${context.repo.owner}/${context.repo.repo}`
   const repoUrl = `${context.serverUrl}/${repo}`
@@ -128,6 +136,17 @@ export const buildPayload = async () => {
     .filter((x) => x.length > 0)
     .join("\n")
 
+  const actionButtons = parseActionButtons(getInput("action_buttons"))
+
+  const actions = actionButtons.map((button) => ({
+    type: "button",
+    text: {
+      type: "plain_text",
+      text: button.text,
+    },
+    url: button.url,
+  }))
+
   const attachment: Attachment = {
     text: text,
     fallback: title,
@@ -135,6 +154,7 @@ export const buildPayload = async () => {
     color: patterns["color"],
     mrkdwn_in: ["text"],
     footer: footer,
+    actions: actions.length > 0 ? actions : undefined,
   }
 
   return attachment
