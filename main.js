@@ -143,12 +143,24 @@ function notifySlack(payload) {
         },
         agent: new https.Agent({ keepAlive: false }),
     };
-    const req = https.request(options, res => {
-        if (res.statusCode === 200) {
-            console.log("Sent message to Slack OK");
-        } else {
-            console.log("Failed to post to Slack!", res);
-        }
+    const req = https.request(options, resp => {
+        // Receive data from the request
+        let data = "";
+        resp.on("data", chunk => {
+            data += chunk;
+        });
+        // Handle response once it's been fully received
+        resp.on("end", () => {
+            console.log("Response body:", data);
+            if (resp.statusCode === 200) {
+                console.log("Sent message to Slack OK");
+            } else {
+                throw Error(`Failed to post to Slack! statusCode = ${resp.statusCode}`);
+            }
+        });
+    }).on("error", (err) => {
+        console.log("Error making request to Slack:", err);
+        throw Error("Failed to make request to Slack");
     });
     req.write(payload);
     req.end();

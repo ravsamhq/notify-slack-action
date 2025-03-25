@@ -1,0 +1,25 @@
+name: Slack notify action test
+
+on:
+  workflow_dispatch:
+  push:
+
+# On PRs, cancel redundant pipelines
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  test-notify:
+    runs-on: [ ubuntu-24.04 ]
+    steps:
+      - uses: actions/checkout@v4
+      - name: test failure
+        run: python3 -c "1/0"
+      - name: Notify Slack on failure
+        if: ${{ always() }}
+        uses: pexip/notify-slack-action@master
+        with:
+          status: ${{ job.status }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_CHANNEL }}
