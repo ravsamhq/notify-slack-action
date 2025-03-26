@@ -14,12 +14,11 @@ jobs:
     runs-on: [ ubuntu-24.04 ]
     steps:
       - uses: actions/checkout@v4
-      - name: test failure
-        run: python3 -c "1/0"
-      - name: Notify Slack on failure
+      - name: Notify Slack
         if: ${{ always() }}
         uses: pexip/notify-slack-action@master
         with:
           status: ${{ job.status }}
+          notify_when: success,failure,warnings
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_CHANNEL }}
