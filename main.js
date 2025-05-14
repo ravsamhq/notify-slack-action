@@ -116,12 +116,23 @@ function constructPayload(inputs, callback) {
     const payload = {
         "attachments": [
             {
-                "text": message,
-                "fallback": title,
-                "color": patterns.color,
-                "mrkdwn_in": ["text"],
-                "footer": footer,
-            }
+                "blocks": [
+                    {
+                        "type": "section",
+                        "text": {
+                            "type": "mrkdwn",
+                            "text": message,
+                        },
+                    },
+                    {
+                        "type": "section",
+                        "text": {
+                            "type": "mrkdwn",
+                            "text": footer,
+                        },
+                    },
+                ],
+            },
         ]
     };
 
