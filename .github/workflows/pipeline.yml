@@ -20,5 +20,19 @@ jobs:
         with:
           status: ${{ job.status }}
           notify_when: success,failure,warnings
+          message_format: |
+            Latin: Hello Håvard, João, François, Mónica
+            Greek: Γειά σου Κόσμε
+            Cyrillic: Привет мир
+            Arabic: مرحبا بالعالم
+            Hebrew: שלום עולם
+            Korean: 안녕하세요 세계
+            Japanese: こんにちは世界
+            Chinese: 你好，世界
+            Hindi: नमस्ते दुनिया
+            Emoji: 😀🎉🚀💻🔥🌍❤️
+            Accents & Symbols: àéîøüñçß©®™✓
+            Math Symbols: ∑∫√∞∇≈≠≤≥
+            Currency: €£¥₩₹
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_TEST_CHANNEL }}
