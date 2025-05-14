@@ -155,11 +155,13 @@ function notifySlack(payload) {
             if (resp.statusCode === 200) {
                 console.log("Sent message to Slack OK");
             } else {
+                console.error("Payload:", payload);
                 throw Error(`Failed to post to Slack! statusCode = ${resp.statusCode}`);
             }
         });
     }).on("error", (err) => {
-        console.log("Error making request to Slack:", err);
+        console.error("Payload:", payload);
+        console.error("Error making request to Slack:", err);
         throw Error("Failed to make request to Slack");
     });
     req.write(payload);
