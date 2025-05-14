@@ -139,7 +139,7 @@ function notifySlack(payload) {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "Content-Length": payload.length,
+            "Content-Length": Buffer.byteLength(payload, 'utf8'),
         },
         agent: new https.Agent({ keepAlive: false }),
     };
