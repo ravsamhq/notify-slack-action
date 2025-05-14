@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Notify Slack
         if: ${{ always() }}
-        uses: pexip/notify-slack-action@master
+        uses: pexip/notify-slack-action@camilo/charset
         with:
           status: ${{ job.status }}
           notify_when: success,failure,warnings
