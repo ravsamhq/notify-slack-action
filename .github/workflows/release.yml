@@ -76,7 +76,7 @@ jobs:
 
       - name: Cancel if Next Version is same as Last Version
         if: (env.last_version == env.next_version) || env.next_version == ''
-        uses: andymckay/cancel-action@0.3
+        uses: andymckay/cancel-action@0.5
 
       - name: Get Major Version related to Next Version
         run: |
